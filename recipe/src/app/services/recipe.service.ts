@@ -1,23 +1,23 @@
-import { Recipe } from './../classes/recipe';
-import { IIngredient } from './../interfaces/ingredient';
 import { Injectable } from '@angular/core';
+import { IRecipe } from '../interfaces/recipe';
+import { IIngredient } from '../interfaces/ingredient';
 import * as recipeData from '../../data.json';
 
 @Injectable()
 export class RecipeService {
-  private recipes: Recipe[] = [];
+  private recipes: IRecipe[] = [];
 
   constructor() {
     recipeData.recipes.forEach(recipe => {
-      this.recipes.push(new Recipe(recipe));
+      this.recipes.push({ ...recipe });
     });
   }
 
-  public getRecipes(): Recipe[] {
+  public getRecipes(): IRecipe[] {
     return this.recipes;
   }
 
-  public getRecipeById(id: number): Recipe {
+  public getRecipeById(id: number): IRecipe {
     return this.recipes.find(recipe => recipe.id === id);
   }
 
@@ -29,7 +29,7 @@ export class RecipeService {
     ingredients: IIngredient[],
     instructions: string[]
   ) {
-    const newRecipeData = {
+    const newRecipe = {
       id: this.getNextId(),
       title,
       description,
@@ -38,23 +38,18 @@ export class RecipeService {
       ingredients: [...ingredients],
       instructions: [...instructions]
     };
-
-    const newRecipe = new Recipe(newRecipeData);
-
-    this.recipes.push(newRecipe);
+    this.recipes.push({ ...newRecipe });
     return newRecipe;
   }
 
-  public updateRecipe(recipe: Recipe): Recipe {
+  public updateRecipe(recipe: IRecipe): IRecipe {
     const recipeIndex = this.recipes.findIndex(r => r.id === recipe.id);
-
     this.recipes[recipeIndex] = recipe;
     return recipe;
   }
 
   public deleteRecipe(id: number): void {
     const recipeIndex = this.recipes.findIndex(r => r.id === id);
-
     if (recipeIndex !== -1) {
       this.recipes.splice(recipeIndex, 1);
     }
