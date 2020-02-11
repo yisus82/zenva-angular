@@ -28,7 +28,7 @@ export class RecipeService {
     imageUrl: string,
     ingredients: IIngredient[],
     instructions: string[]
-  ) {
+  ): IRecipe {
     const newRecipe = {
       id: this.getNextId(),
       title,
